@@ -5,6 +5,7 @@ from imperal_sdk import ActionResult
 from constant_contact_client import ConstantContactClient
 from app import chat
 from schemas import (
+    NoParams,
     ConnectParams, ConnectionIdParams, ConnectionList, ConnectionRecord, DeleteResult
 )
 
@@ -36,6 +37,15 @@ async def resolve_connection(ctx, connection_id: str = "") -> dict | None:
             return c
     return None
 
+@chat.function(
+    "connect_constant_contact",
+    "Connect Constant Contact account via credentials.",
+    action_type="write",
+    chain_callable=True,
+    event="constant-contact-connector.connect_constant_contact",
+    effects=["create:connection"],
+    data_model=ConnectParams
+)
 async def connect_constant_contact(params: ConnectParams, ctx) -> ActionResult[ConnectionRecord]:
     """Connect Constant Contact Connector."""
     client = ConstantContactClient(api_key=params.api_key, base_url=params.base_url)
@@ -54,11 +64,27 @@ async def connect_constant_contact(params: ConnectParams, ctx) -> ActionResult[C
     await _save_connections(ctx, conns)
     return ActionResult.ok(ConnectionRecord(id=cid, label=record["label"], masked_key=_mask(params.api_key), base_url=params.base_url, is_active=True))
 
-async def list_connections(ctx) -> ActionResult[ConnectionList]:
+@chat.function(
+    "list_connections",
+    "List connected Constant Contact accounts.",
+    action_type="read",
+    chain_callable=True,
+    data_model=NoParams
+)
+async def list_connections(params: NoParams, ctx) -> ActionResult[ConnectionList]:
     conns = await _load_connections(ctx)
     records = [ConnectionRecord(id=c["id"], label=c["label"], masked_key=_mask(c.get("api_key", "")), base_url=c.get("base_url", ""), is_active=c.get("is_active", False)) for c in conns]
     return ActionResult.ok(ConnectionList(connections=records, total=len(records)))
 
+@chat.function(
+    "disconnect_constant_contact",
+    "Disconnect Constant Contact account.",
+    action_type="write",
+    chain_callable=True,
+    event="constant-contact-connector.disconnect_constant_contact",
+    effects=["delete:connection"],
+    data_model=ConnectionIdParams
+)
 async def disconnect_constant_contact(params: ConnectionIdParams, ctx) -> ActionResult[DeleteResult]:
     conns = await _load_connections(ctx)
     target = await resolve_connection(ctx, params.connection_id)

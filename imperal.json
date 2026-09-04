@@ -13,6 +13,137 @@
   ],
   "tools": [
     {
+      "name": "connect_constant_contact",
+      "description": "Connect Constant Contact account via credentials.",
+      "action_type": "write",
+      "chain_callable": true,
+      "effects": [
+        "create:connection"
+      ],
+      "id_projection": "",
+      "params_schema": {
+        "properties": {
+          "label": {
+            "default": "",
+            "description": "Friendly connection label, e.g. Acme Constant Contact.",
+            "title": "Label",
+            "type": "string"
+          },
+          "api_key": {
+            "description": "Marketing API Key or Bearer Token.",
+            "title": "Api Key",
+            "type": "string"
+          },
+          "base_url": {
+            "default": "",
+            "description": "Optional custom base URL or instance domain.",
+            "title": "Base Url",
+            "type": "string"
+          }
+        },
+        "required": [
+          "api_key"
+        ],
+        "title": "ConnectParams",
+        "type": "object"
+      },
+      "return_schema": {
+        "properties": {
+          "label": {
+            "default": "",
+            "description": "Friendly connection label, e.g. Acme Constant Contact.",
+            "title": "Label",
+            "type": "string"
+          },
+          "api_key": {
+            "description": "Marketing API Key or Bearer Token.",
+            "title": "Api Key",
+            "type": "string"
+          },
+          "base_url": {
+            "default": "",
+            "description": "Optional custom base URL or instance domain.",
+            "title": "Base Url",
+            "type": "string"
+          }
+        },
+        "required": [
+          "api_key"
+        ],
+        "title": "ConnectParams",
+        "type": "object"
+      },
+      "event": "constant-contact-connector.connect_constant_contact",
+      "background": false,
+      "long_running": false,
+      "scopes": [],
+      "owner_chat_tool": "tool_constant-contact-connector_chat"
+    },
+    {
+      "name": "list_connections",
+      "description": "List connected Constant Contact accounts.",
+      "action_type": "read",
+      "chain_callable": true,
+      "effects": [],
+      "id_projection": "",
+      "params_schema": {
+        "description": "Empty parameter model.",
+        "properties": {},
+        "title": "NoParams",
+        "type": "object"
+      },
+      "return_schema": {
+        "description": "Empty parameter model.",
+        "properties": {},
+        "title": "NoParams",
+        "type": "object"
+      },
+      "event": "",
+      "background": false,
+      "long_running": false,
+      "scopes": [],
+      "owner_chat_tool": "tool_constant-contact-connector_chat"
+    },
+    {
+      "name": "disconnect_constant_contact",
+      "description": "Disconnect Constant Contact account.",
+      "action_type": "write",
+      "chain_callable": true,
+      "effects": [
+        "delete:connection"
+      ],
+      "id_projection": "",
+      "params_schema": {
+        "properties": {
+          "connection_id": {
+            "default": "",
+            "description": "Connection identifier (empty uses active connection).",
+            "title": "Connection Id",
+            "type": "string"
+          }
+        },
+        "title": "ConnectionIdParams",
+        "type": "object"
+      },
+      "return_schema": {
+        "properties": {
+          "connection_id": {
+            "default": "",
+            "description": "Connection identifier (empty uses active connection).",
+            "title": "Connection Id",
+            "type": "string"
+          }
+        },
+        "title": "ConnectionIdParams",
+        "type": "object"
+      },
+      "event": "constant-contact-connector.disconnect_constant_contact",
+      "background": false,
+      "long_running": false,
+      "scopes": [],
+      "owner_chat_tool": "tool_constant-contact-connector_chat"
+    },
+    {
       "name": "list_subscribers",
       "description": "List subscribers (Audience contact with subscription status and custom attributes).",
       "action_type": "read",
