@@ -1,3 +1,7 @@
-# Constant Contact Connector - UI_COMPONENT_PLAN.md
+# Constant Contact Connector — UI Component Plan
 
-Standard documentation for Constant Contact Connector in Imperal Cloud.
+Following `UI_INTERFACE_STANDARD.md`:
+- **Left Sidebar:** `align="stretch"` vertical stack with full width layout.
+- **Inputs:** `ui.Input` with explicit labels and contextual placeholders.
+- **Action Buttons:** Primary `Connect` button and secondary `Disconnect`.
+- **Help Modal:** Explanatory setup walkthrough accessible via ghost button trigger.
