@@ -10,7 +10,7 @@ from schemas import (
 from handlers_connection import resolve_client
 
 @chat.function("list_contacts", "List contacts in Constant Contact.", action_type="read", chain_callable=True, event="constant-contact-connector.list_contacts", effects=["read:contacts"], data_model=ContactList)
-async def list_contacts(params: ListContactParams, ctx) -> ActionResult:
+async def list_contacts(ctx, params: ListContactParams) -> ActionResult:
     client = await resolve_client(ctx, params.connection_id)
     try:
         raw_items = await client.list_contacts(limit=params.limit)
@@ -24,7 +24,7 @@ async def list_contacts(params: ListContactParams, ctx) -> ActionResult:
         return ActionResult.error(f"Error listing contacts: {e}")
 
 @chat.function("get_contact", "Get details of one Contact in Constant Contact.", action_type="read", chain_callable=True, event="constant-contact-connector.get_contact", effects=["read:contact"], data_model=ContactRecord)
-async def get_contact(params: GetContactParams, ctx) -> ActionResult:
+async def get_contact(ctx, params: GetContactParams) -> ActionResult:
     client = await resolve_client(ctx, params.connection_id)
     try:
         r = await client.get_contact(params.contact_id)
@@ -35,7 +35,7 @@ async def get_contact(params: GetContactParams, ctx) -> ActionResult:
         return ActionResult.error(f"Error retrieving Contact: {e}")
 
 @chat.function("audit_contact_health", "Audit health of Constant Contact contacts and connectivity.", action_type="read", chain_callable=True, event="constant-contact-connector.audit_contact_health", effects=["read:audit"], data_model=AuditHealthReport)
-async def audit_contact_health(params: ConnectionIdParams, ctx) -> ActionResult:
+async def audit_contact_health(ctx, params: ConnectionIdParams) -> ActionResult:
     client = await resolve_client(ctx, params.connection_id)
     try:
         items = await client.list_contacts(limit=50)
